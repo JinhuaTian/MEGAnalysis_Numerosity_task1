@@ -4,6 +4,7 @@ Created on Fri Sep 10 20:44:26 2021
 
 @author: tclem
 """
+from re import I
 import numpy as np
 # import pingouin as pg
 from pingouin import correlation as pg
@@ -21,7 +22,7 @@ RDMName = ['Number', 'Item area', 'Total field area', 'Density', 'Low-level Feat
 # calculate partial Spearman correlation for each RDM
 # ---------------------------------------------------
 # '004','005','006','007','009','011','012','013','014','015','016','017','018','019','020','021','022','023'
-subjs = ['002', '003']
+subjs = ['003'] #'002', '003'
 
 samplingRate = 500
 RDMnum = 5
@@ -33,8 +34,8 @@ RDMcorr = np.zeros((2,RDMnum,subjNums,tps))
 RDMp = np.zeros((2,RDMnum,subjNums,tps))
 
 side = 'two-sided'
-partial = True
-types = ['num','is']
+partial = 'Spearman' #'partialSpearman','Spearman'
+types = ['num','is'] 
 
 print('Initing')
 for j in range(len(types)):
@@ -53,12 +54,12 @@ for j in range(len(types)):
         for tp in range(tps):
             datatmp = data[tp, :]  # subIndex,t,re,foldIndex,RDMindex
             RDMtmp = np.average(data[tp, :, :, :], axis=(0, 1))
-            if partial == True:  # 'RDM0','RDM1','RDM2','RDM3','RDM4'
-                # 'numRDM','isRDM','tfaRDM','denRDM','denRDM'
-                pdData = pd.DataFrame(
+            pdData = pd.DataFrame(
                     {'respRDM': RDMtmp, 'RDM0': modelRDM[0], 'RDM1': modelRDM[1], 'RDM2': modelRDM[2], 'RDM3': modelRDM[3],
                     'RDM4': modelRDM[4]})
-                modelList = ['RDM0','RDM1', 'RDM2', 'RDM3', 'RDM4']
+            # 'numRDM','isRDM','tfaRDM','denRDM','denRDM'
+            modelList = ['RDM0','RDM1', 'RDM2', 'RDM3', 'RDM4']
+            if partial == 'partialSpearman':  # 'RDM0','RDM1','RDM2','RDM3','RDM4'
                 for i in range(RDMnum):
                     newlist = modelList.copy()
                     del newlist[i]
@@ -68,6 +69,12 @@ for j in range(len(types)):
                     # print(str(j)+str(i)+str(subj)+str(tp))
                     RDMcorr[j, i, subj, tp] = corr['r']
                     RDMp[j, i, subj, tp] = corr['p-val']
+            elif partial == 'Spearman':
+                for i in range(RDMnum):
+                    corr = pg.corr(RDMtmp,pdData[modelList[i]])
+                    RDMcorr[j, i, subj, tp] = corr['r']
+                    RDMp[j, i, subj, tp] = corr['p-val']
+
         del data
 
 # plot the results
@@ -81,15 +88,15 @@ for j in range(len(types)):
         # judge whether there are significant line
         # plt.plot(np.arange(-100,700,1000/samplingRate),correctedSig[i,:],color=color[i])  # range(-30,tps-30)
     plt.xlabel('Time points(ms)')
-    if partial == False:
+    if partial == 'partialSpearman':
         plt.ylabel('Partial spearman correlation')
         # 'Time course of partial Spearman correlations between MEG RDMs and model RDMs(pvalue)'
         plt.title('Time course of partial Spearman correlations between MEG RDMs and model RDMs')
-    elif partial == True:
+    elif partial =='Spearman':
         plt.ylabel('Spearman correlation')
         # 'Time course of partial Spearman correlations between MEG RDMs and model RDMs(pvalue)'
-        plt.title('Time course of Spearman correlations between MEG RDMs and model RDMs '+types[j]+' task')
+        plt.title('Time course of Spearman correlations between MEG RDMs and model RDMs')
     plt.legend()
-    plt.savefig(pj(rootDir, 'GroupRSA_multifeature'+types[j]+'.png'))
+    plt.savefig(pj(rootDir, 'GroupRSA_multifeature3'+partial+types[j]+'.png'))
     plt.show()
 

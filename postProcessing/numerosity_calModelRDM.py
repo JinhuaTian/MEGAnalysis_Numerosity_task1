@@ -96,9 +96,9 @@ def flip90_left(arr):
 # nomalize RDM vector
 numRDM = normalization(numRDM)
 isRDM = normalization(isRDM)
-corrArray = normalization(corrArray) # LLF RDM vector, half of the RDM
 denRDM = normalization(denRDM)
 tfaRDM = normalization(tfaRDM)
+corrArray = normalization(corrArray) # LLF RDM vector, half of the RDM
 
 
 # plot LLF RDM
@@ -118,8 +118,36 @@ fig.colorbar(cax)  #cax?matshow?????????????
 plt.title('Low-level feature RDM')
 plt.show()
 '''
+def flip90_left(arr):
+    new_arr = np.transpose(arr)
+    new_arr = new_arr[::-1]
+    return new_arr
 
-# np.save('C:/Users/tclem/Desktop/MEG/LowLevelMatrix.npy',corrArray)
+RDMs = [numRDM,isRDM,tfaRDM,denRDM,corrArray]
+plotPics = ['Number','Item area', 'Total Field area', 'Density','Low-level feature']
+'''
+for i in range(len(plotPics)):
+    fig = plt.figure(figsize=(8, 6), dpi=100) #调用figure创建一个绘图对象
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(RDMs[i], cmap='jet',vmin=0, vmax=1)  #绘制热力图，从-1到1  ,
+    fig.colorbar(cax)  #cax将matshow生成热力图设置为颜色渐变条
+    plt.title(plotPics[i] +' RDM')
+    plt.show()
+'''
+
+from pandas.core.frame import DataFrame
+import pandas as pd
+corrMatrix = DataFrame([numRDM,isRDM,tfaRDM,denRDM,corrArray])            
+corr_all = corrMatrix.T.corr(method='spearman')
+
+fig = plt.figure(figsize=(8, 6), dpi=100) #调用figure创建一个绘图对象
+ax = fig.add_subplot(111)
+cax = ax.matshow(corr_all, cmap='jet',vmin=0, vmax=1)  #绘制热力图，从-1到1  ,
+fig.colorbar(cax)  #cax将matshow生成热力图设置为颜色渐变条
+ax.set_xticklabels(['','Number','Item area', 'Total Field area', 'Density','Low-level feature'],fontdict={'size': 10, 'color': 'black'})
+ax.set_yticklabels(['','Number','Item area', 'Total Field area', 'Density','Low-level feature'],fontdict={'size': 10, 'color': 'black'})
+plt.title('Spearman correlation five RDM')
+plt.show()
 
 modelRDM = np.array([numRDM,isRDM,tfaRDM,denRDM,corrArray])
 path = pj(stiPath,'ModelRDM_NumIsTfaDenLLF.npy')

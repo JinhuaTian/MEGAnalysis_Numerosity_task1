@@ -138,7 +138,7 @@ for t in range(nTime):
             RDMindex = 0
             for i in range(labelPair.shape[0]): 
                 x,y = labelPair[i,0],labelPair[i,1]
-                Pd1 = trainPd[(trainPd[:,0] == (x+1)) | (trainPd[:,0] == (y+1))] # labels are 1~80
+                Pd1 = trainPd[(trainPd[:,0] == (x+1)) | (trainPd[:,0] == (y+1))] # labels are 1~45
                 Pd2 = testPd[(testPd[:,0] == (x+1)) | (testPd[:,0] == (y+1))]
                 # run svm
                 
