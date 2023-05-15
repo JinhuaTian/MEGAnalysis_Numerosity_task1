@@ -21,11 +21,8 @@ import time
 #sys.path.append('/nfs/a2/userhome/tianjinhua/workingdir/meg/mne/')
 import mne
 from mne.transforms import Transform
-from sklearn.preprocessing import StandardScaler
-scaler = StandardScaler()
-
-from numba import jit
-jit(nopython=True,parallel=True) #nopython=True,parallel=True
+#from sklearn.preprocessing import StandardScaler
+#scaler = StandardScaler()
 
 # basic info
 rootDir = '/data/home/nummag01/workingdir/fusion1/fMRI'
@@ -38,12 +35,12 @@ subjs = ['subj001','subj002','subj003','subj004','subj005','subj006','subj007','
 types = ['num','fa'] # 'num','fa'
 # 'subj001','subj002','subj003','subj004','subj005','subj006','subj007','subj008'
 
-newSamplingRate = 200
+newSamplingRate = 500
 labelNum = 45
 levelNum = 9
 tpoints = int(newSamplingRate*0.8) # 80*3
 
-ROInames = ['V3(L)','V3(R)','IPS(L)','SFG(L)'] 
+ROInames = ['V3d(L)','V3d(R)','IPS(L)','SFG(L)'] 
 # roiList = [[1,2,3,4,5,6,16,17],[8,9],[10,11],[14,15],[18,19,20,21,22,23,24],[25]]
 imgNum=9 
 taskNum =2 
@@ -84,8 +81,6 @@ for taskNum in range(len(taskTypes)):
         tempData = np.flip(avgCorrMatrix[taskNum,roi,:,:],axis=0) # flip upside down 
         pd_data=pd.DataFrame(tempData,index=yTicks,columns=xTicks)
         sns.heatmap(pd_data,cmap='jet',cbar=True, vmin=0, vmax=0.2) # ,vmin=0.2, vmax=0.5*1000/newSamplingRate,could add mask, mask =mask
-        #plt.gca().xaxis.set_major_locator(ticker.FixedLocator([0,100,200,300,400,500,600])) 
-        #plt.gca().yaxis.set_major_locator(ticker.FixedLocator([0,100,200,300,400,500,600]))     
         plt.title('MEG-'+ROInames[roi],fontsize=30)      
         plt.ylabel('Time (ms)',fontsize=20)
         plt.xlabel('Time (ms)',fontsize=20)

@@ -1,8 +1,8 @@
 <<<<<<< HEAD
 # Numerosity_fusion_task1
  1. MEG preprocessing and data anlaysis
- 2. fMRI RSA & decoding
- 3. fusion analysis
+ 2. fMRI RSA & decoding & temporal generalization
+ 4. Fusion analysis
 =======
 # MEGAnalysis_Numerosity_task1
 NumerosityTask

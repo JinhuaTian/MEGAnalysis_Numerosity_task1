@@ -16,7 +16,7 @@ saveDir = '/data/home/nummag01/workingdir/fusion1/fMRI/sepROI'
 # load contrast 
 #ROIname = ['Early visual cortex(EVC)', '(VO)','lateral Occipical Cortex(LO)',,'Frontal eye field(FEF)']
 #ROInameShort = ['EVC','VO','PHC','LO','IPS','FEF'] # 'PSL'?
-ROIname = ['V3(L)','V3(R)','IPS(L)','SFG(L)'] 
+ROIname = ['V3d(L)','V3d(R)','IPS(L)','SFG(L)'] 
 # roiList = [[1,2,3,4,5,6,16,17],[8,9],[10,11],[14,15],[18,19,20,21,22,23,24],[25]]
 imgNum=9 
 taskNum =2 
@@ -97,7 +97,7 @@ for taskN in range(len(taskType)):
         plt.savefig(pj(saveDir, 'pic/rsa'+partial+taskType[taskN]+ROIname[roiN]+'.png'))
         plt.show()
 
-# y axis = modelType
+# plot RSA results
 # 2 picutres: modelType, subject X ROI name 
 # corrResults = np.zeros((len(taskType),len(MEG),len(ROIname),len(modelList))) 
 import pandas as pd
