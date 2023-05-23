@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Aug 27 10:22:51 2021
+Created on Fri Aug 27 10:22:51 2022
 
 @author: tclem
 """
@@ -27,14 +27,12 @@ from mne.transforms import Transform
 # basic info
 rootDir = '/data/home/nummag01/workingdir/fusion1/fMRI'
 saveDir = '/data/home/nummag01/workingdir/fusion1/fMRI/sepROI'
-#'subj001','subj002','subj003','subj004','subj005','subj006','subj007','subj008','subj009',
-# 'subj010','subj011','subj012','subj013','subj016','subj017','subj018','subj019','subj020'
+# nohup python numerosity_channelDecoding_RSAcalRDM.py > rsa2.out 2>1&1 & 
 subjs = ['subj001','subj002','subj003','subj004','subj005','subj006','subj007','subj008',
  'subj011','subj012','subj016','subj017','subj018','subj019','subj021','subj023','subj024','subj025']
-# nohup python numerosity_channelDecoding_RSAcalRDM.py > rsa2.out 2>1&1 & 
-types = ['num','fa'] # 'num','fa'
-# 'subj001','subj002','subj003','subj004','subj005','subj006','subj007','subj008'
 
+types = ['num','fa'] # 'num','fa'
+# basic info
 newSamplingRate = 500
 labelNum = 45
 levelNum = 9
@@ -67,7 +65,7 @@ for subjNum in range(len(subjs)):
                     corrMatrix[subjNum,taskN,roi,tx,ty],_ = spearmanr(MEGrdv[subjNum,taskN,tx,ty,:],fMRIrdv[taskN][subjNum,roi,:])
 # average cross subjects
 avgCorrMatrix = np.average(corrMatrix,axis=0)
-
+# plot temporal generalization matrix for each ROI
 for taskNum in range(len(taskTypes)):
     count = 1
     fig1 =plt.figure(figsize=(20,20),dpi=300)
@@ -89,7 +87,7 @@ for taskNum in range(len(taskTypes)):
     plt.tight_layout()
     fig1.savefig('matplot_numfa'+taskTypes[taskNum]+'.png')
     plt.show()
-
+# plot RSA-based TG
 rawMEGTG = np.average(MEGrdv,axis=(0,1,4))
 fig1 =plt.figure(figsize=(20,20),dpi=300)    
 #plt.title('Temporal generalization')        

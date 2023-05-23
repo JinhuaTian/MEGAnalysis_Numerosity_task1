@@ -9,7 +9,6 @@ scaler = StandardScaler()
 import nibabel
 # fMRI=[15,5,20,7,12,11,16,4,3,18,17,14,13,10,2,8,19,6]
 MEG = [1,2,3,4,5,6,7,8,11,12,16,17,18,19,21,23,24,25]
-#fMRIDir = '/data/home/nummag01/workingdir/fusion1/fMRI/'
 MEGDir = '/data/home/nummag01/workingdir/fusion1/MEG4/'
 roiPath = '/data/home/nummag01/workingdir/fusion1/funcROI/'
 saveDir = '/data/home/nummag01/workingdir/fusion1/fMRI/sepROI'
@@ -25,12 +24,12 @@ method = ['direct','com']
 
 newSamplingRate = 500
 tpoints = int(newSamplingRate*0.8) # 80*3
-
+# load RDV (OR RSV)
 numRDV = np.load(pj(saveDir,'numRDV_subjRoiVec.npy')) # nsubject x nROI x nRDV
 faRDV = np.load(pj(saveDir,'faRDV_subjRoiVec.npy')) # nsubject x nROI x nRDV
 fMRIrdv = [numRDV,faRDV] # !!![ntask][nsubject x nROI x nRDV]
 del numRDV, faRDV
-# just the first two models
+# load model RDV (the first two models)
 modelRDM = np.load(pj(MEGDir,'ModelRDM_NumFaDenLLF9.npy'))
 
 RDVlength = 0
@@ -56,6 +55,7 @@ for taskN in range(len(taskType)):
             fMRIVector = fMRIrdv[taskN][subjN,roiN,:]
             pdData = pd.DataFrame(
                 {'fMRI': fMRIVector, 'RDM0': modelRDM[0], 'RDM1': modelRDM[1], 'RDM2': modelRDM[2]})  #, 'RDM3': modelRDM[3]
+            # three common apporch for RSA
             if partial == 'partialSpearman':
                 for i in range(len(modelList)):
                     newlist = modelList.copy()
@@ -73,8 +73,7 @@ for taskN in range(len(taskType)):
                 for i in range(len(modelList)):
                     corr = pg.corr(fMRIVector,pdData[modelList[i]],alternative='two-sided',method='kendall')
                     corrResults[taskN,subjN,roiN,i] = corr['r']
-# plot for each ROI 
-# plot resultsimport pandas as pd
+# plot RSA results for each ROI 
 import seaborn as sns
 import matplotlib.pyplot as plt
 for taskN in range(len(taskType)):
